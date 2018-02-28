@@ -1,6 +1,11 @@
 const path = require('path');
+const webpack = require('webpack');
+const HTMLPlugin = require('html-webpack-plugin');
 
-module.exports = {
+const isDve = process.env.NODE_ENV === 'development';
+
+const config = {
+    target: 'web',
     entry: path.join(__dirname, 'src/index.js'),
     output: {
         filename: 'bundle.js',
@@ -33,5 +38,34 @@ module.exports = {
                 ]
             },
         ]
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: isDve ? '"development"' : '"production"'
+            }
+        }),
+        new HTMLPlugin()
+    ]
 }
+
+if (isDve) {
+    config.devtool = '#cheap-module-eval-source-map';
+    config.devServer = {
+        port: 9000,
+        host: '0.0.0.0',
+        overlay: {
+            errors: true
+        },
+        hot: true
+        // historyFallback: {
+        //
+        // }
+    }
+    config.plugins.push(
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NodeEnvironmentPlugin()
+    )
+}
+
+module.exports = config
