@@ -18,12 +18,26 @@ const config = {
                 loader: 'vue-loader'
             },
             {
+                test: /\.jsx$/,
+                loader: 'babel-loader'
+            },
+            {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
             },
             {
                 test: /\.styl/,
-                use: ['style-loader', 'css-loader', 'stylus-loader']
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            sourceMap: true
+                        }
+                    },
+                    'stylus-loader'
+                ]
             },
             {
                 test: /\.(jpg|gif|jpeg|svg|png)$/,
