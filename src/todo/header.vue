@@ -1,6 +1,6 @@
 <template>
     <header class="main-header">
-        <h1>todo</h1>
+        <h1>vue-todolist</h1>
     </header>
 </template>
 <style lang="stylus" scoped>

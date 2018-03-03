@@ -2,27 +2,29 @@
     <section class="real-app">
         <input
             autofocus="autofocus"
-            placeholder="请输入...."
+            placeholder="请输入信息...."
             class="add-input"
-            @keyup="addTodo"
+            @keyup.enter="addTodo"
             type="text">
-        <Item :todo="todo" />
-        <Tabs :filter="filter" />
+        <Item
+            v-for="todo in filterdTodos"
+            :key="todo.id"
+            :todo="todo"
+            @delete="deleteTodo"
+        />
+        <Tabs :filter="filter" :todos="todos" @toggle="toggleFilter" @clear="clearAllCompleted" />
     </section>
 </template>
 
 <script>
 import Item from './item.vue'
 import Tabs from './tabs.vue'
+let id = 0
     export default {
         data() {
             return {
-                todo: {
-                    id: 0,
-                    content: 'this is todo',
-                    completed: false
-                },
-                filter: 'all'
+                todos: [],
+                filter: '全部'
             }
         },
         components: {
@@ -30,7 +32,35 @@ import Tabs from './tabs.vue'
             Tabs
         },
         methods: {
-            addTodo() {}
+            addTodo(e) {
+                if(e.target.value==''){
+                    alert("请输入信息再添加！")
+                    return
+                }
+                this.todos.unshift({
+                    id : id ++,
+                    content: e.target.value.trim(),
+                    completed: false
+                })
+                e.target.value = ''
+            },
+            deleteTodo(id) {
+                this.todos.splice(this.todos.findIndex(todo => todo.id == id), 1)
+            },
+            toggleFilter(state) {
+                this.filter = state
+            },
+            clearAllCompleted() {
+                this.todos = this.todos.filter(_ => !_.completed)
+            }
+        },
+        computed: {
+            filterdTodos() {
+                if (this.filter == '全部') {
+                    return this.todos
+                }
+                return this.todos.filter(_ => _.completed == (this.filter == '已选中'))
+            }
         }
     }
 </script>

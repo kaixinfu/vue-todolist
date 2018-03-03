@@ -1,6 +1,6 @@
 <template>
     <div class="helper">
-        <span class="left">1 items left</span>
+        <span class="left">{{unFinishedTodoLength}}条未选中信息</span>
         <span class="tabs">
             <span
             v-for="state in states"
@@ -10,7 +10,7 @@
             >{{state}}</span>
         </span>
         <span class="clear" @click="clearAllCompleted()">
-            Clear completed
+            清除 已选中
         </span>
     </div>
 </template>
@@ -21,12 +21,29 @@
                 type: String,
                 required: true
             },
+            todos: {
+                type: Array,
+                required: true
+            }
         },
         data() {
           return {
-              states:['all', "active", "completed"]
+              states:['全部', "未选中", "已选中"]
           }
         },
+        methods: {
+            toggleFilter(state) {
+                this.$emit('toggle', state)
+            },
+            clearAllCompleted() {
+                this.$emit('clear')
+            }
+        },
+        computed: {
+            unFinishedTodoLength() {
+                return this.todos.filter(_ => !_.completed).length
+            }
+        }
     }
 </script>
 <style lang="stylus" scoped>
