@@ -78,6 +78,10 @@ if (isDve) {
         new webpack.NodeEnvironmentPlugin()
     )
 } else {
+    config.entry = {
+        app: path.join(__dirname, 'src/index.js'),
+        vendor: ['vue']
+    }
     config.output.filename = '[name].[chunkhash:8].js'
     config.module.rules.push({
         test: /\.styl/,
@@ -95,8 +99,33 @@ if (isDve) {
             ]
         })
     })
+    config.optimization = {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    chunks: 'initial',
+                    minChunks: 2,
+                    maxInitialRequests: 5,
+                    minSize: 0
+                },
+                vendor: {
+                    test: /node_modules/,
+                    chunks: 'initial',
+                    name: 'vendor',
+                    priority: 10,
+                    enforce: true
+                }
+            }
+        }
+    }
     config.plugins.push(
-        new ExtractPlugin('styles.[contentHash:8].css')
+        new ExtractPlugin('styles.[contentHash:8].css'),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor'
+        }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'runtime'
+        // })
     )
 }
 
