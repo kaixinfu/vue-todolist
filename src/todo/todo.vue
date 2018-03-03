@@ -6,11 +6,29 @@
             class="add-input"
             @keyup="addTodo"
             type="text">
+        <Item :todo="todo" />
+        <Tabs :filter="filter" />
     </section>
 </template>
 
 <script>
+import Item from './item.vue'
+import Tabs from './tabs.vue'
     export default {
+        data() {
+            return {
+                todo: {
+                    id: 0,
+                    content: 'this is todo',
+                    completed: false
+                },
+                filter: 'all'
+            }
+        },
+        components: {
+            Item,
+            Tabs
+        },
         methods: {
             addTodo() {}
         }
