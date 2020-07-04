@@ -1,4 +1,4 @@
-# vue-todolist
+# vue-todolist 用于docker、jenkins实验项目
 ## 目录
 1. 通过webpack搭建vue工程;
 2. .vue文件开发模式;
